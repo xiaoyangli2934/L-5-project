@@ -2,31 +2,45 @@
 title: "how to import data"
 author: "Xiaoyang Li"
 date: "2019/9/16"
-output: html_document
+output: github_document
 ---
-```{r}
+```{r set up,include=FALSE}
+# what used for ？
+knitr::opts_chunk$set(echo = TRUE)
+
 library(tidyverse)
+library(readxl)
+```
+
+## Load in the little data
+```{r}
+## read in a dataset
+getwd()
+# do not use read.csv
 litters_data = read_csv(file = "./data/FAS_litters.csv")
-names(litters_data)
-litters_data = janitor::clean_names(litters_data)
-names(litters_data)
+view(litters_data) # better in your console rather than code chunk, or it will show in your html
+litters_data = janitor::clean_names(litters_data) # no need to library(jvnitor); avoid the same function name in different package; no need to install package you do not use a lot of functoin
 
-pups_data_relative = read_csv(file = "./data/FAS_pups.csv")
-pups_data_absolute = read_csv(file = "E:/CU/Data science/L 5 project/data/FAS_pups.csv")
+```
 
-litters_data
-tail(litters_data, 5)
 
-skimr::skim(litters_data)
+## Load in the pups data
+```{r}
+pups_data_ = read_csv(file = "./data/FAS_pups.csv")
+view(pups_data)
+pups_data = janitor::clean_names(pups_data)
+view(pups_data)
+skimr::skim(pups_data) # looks cool
+```
 
-litters_data = read_csv(file = "./data/FAS_litters.csv",
-                        skip = 10, col_names = FALSE)
-head(litters_data)
 
-litters_data = read_csv(file = "./data/FAS_litters.csv",
+## play with column parsing
+```{r}
+litters_data = read_csv(
+  file = "./data/FAS_litters.csv",
   col_types = cols(
     Group = col_character(),
-    `Litter Number` = col_character(),
+    `Litter Number` = col_character(), # use '' to keep the space b/w litter and number 
     `GD0 weight` = col_double(),
     `GD18 weight` = col_double(),
     `GD of Birth` = col_integer(),
@@ -35,19 +49,32 @@ litters_data = read_csv(file = "./data/FAS_litters.csv",
     `Pups survive` = col_integer()
   )
 )
-tail(litters_data)
-
-litters_data = read_csv(file = "./data/FAS_litters.csv",
-  col_types = "ccddiiii"
-)
-litters_data
-
-library(readxl)
-mlb11_data = read_excel("./data/mlb11.xlsx", n_max = 20)
-head(mlb11_data, 5)
-
-library(haven)
-pulse_data = read_sas("./data/public_pulse_data.sas7bdat")
-head(pulse_data, 5)
 ```
+
+## Read in an excel file...
+```{r}
+mlb11_data_subset = read_excel(
+  path = "./data/mlb11.xlsx", # path rather than file 
+  range = "A1:D7", 
+  sheet = "mlb11")  
+```
+
+## Read in SAS
+```{r}
+pulse_data = haven::read_sas("./data/public_pulse_data.sas7bdat")
+
+```
+
+## Write in
+
+```{r}
+write_csv(mlb11_data_subset, path = "./data/mlb11_data_subset.csv") # remember to add the file name and file type
+```
+
+
+little tips
+
+* not use $, which get 
+* not use read.csv. read.csv will get "factor" data type while read_csv will get "character" data type
+
 
