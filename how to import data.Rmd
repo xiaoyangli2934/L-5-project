@@ -72,6 +72,7 @@ write_csv(mlb11_data_subset, path = "./data/mlb11_data_subset.csv") # remember t
 ```
 
 
+
 little tips
 
 * not use $, which get 
